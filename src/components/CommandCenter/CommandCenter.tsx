@@ -1,35 +1,48 @@
 "use client";
 
 import { useState } from "react";
+
 import { appConfig } from "@/config/app";
 import { brain } from "@/services/brain/Brain";
-import { contentStore } from "@/services/store/ContentStore";
+import { aiSession } from "@/services/session/AISession";
 
 import MissionCard from "./cards/MissionCard";
 import ProjectCard from "./cards/ProjectCard";
 import QueueCard from "./cards/QueueCard";
 import AssistantCard from "./cards/AssistantCard";
 import BrainCard from "./cards/BrainCard";
+import ActivityCard from "./cards/ActivityCard";
+import ConsoleCard from "./cards/ConsoleCard";
 
 export default function CommandCenter() {
+  const [queueCount, setQueueCount] = useState(0);
   const [brainStatus, setBrainStatus] = useState(brain.think());
-  const [queueCount, setQueueCount] = useState(contentStore.getQueueCount());
-
-  function startAiSession() {
-    brain.setStatus("thinking");
-
-    contentStore.clear();
-    contentStore.seedDemoData();
-
-    setBrainStatus(brain.think());
-    setQueueCount(contentStore.getQueueCount());
-  }
+  const [activities, setActivities] = useState<string[]>([]);
+  const [logs, setLogs] = useState<string[]>([]);
 
   const today = new Date().toLocaleDateString("en-US", {
     weekday: "long",
     month: "long",
     day: "numeric",
   });
+
+  function handleSessionComplete() {
+    const result = aiSession.run();
+
+    const status = brain.think();
+    const time = new Date().toLocaleTimeString();
+
+    setQueueCount(result.queueCount);
+    setBrainStatus(status);
+
+    setActivities((prev) => [
+      `${time} • ${result.message}`,
+      `${time} • Queue updated (${result.queueCount} items)`,
+      ...prev,
+    ]);
+
+    setLogs(result.logs);
+  }
 
   return (
     <div>
@@ -38,13 +51,17 @@ export default function CommandCenter() {
           Good evening, {appConfig.founder} 👋
         </h1>
 
-        <p className="text-zinc-400 mt-2">Welcome back.</p>
+        <p className="text-zinc-400 mt-2">
+          Welcome back.
+        </p>
 
         <p className="text-zinc-500 text-sm mt-1">
           Here&apos;s your business overview for today.
         </p>
 
-        <p className="text-xs text-zinc-600 mt-4">{today}</p>
+        <p className="text-xs text-zinc-600 mt-4">
+          {today}
+        </p>
       </div>
 
       <div className="grid grid-cols-2 gap-6">
@@ -54,9 +71,13 @@ export default function CommandCenter() {
 
         <QueueCard queueCount={queueCount} />
 
-        <AssistantCard onStartSession={startAiSession} />
+        <AssistantCard onSessionComplete={handleSessionComplete} />
 
         <BrainCard brainStatus={brainStatus} />
+
+        <ActivityCard items={activities} />
+
+        <ConsoleCard logs={logs} />
       </div>
     </div>
   );
