@@ -12,26 +12,26 @@ export class AISession {
   run(): AISessionResult {
     brain.setStatus("thinking");
 
-    const result = agentManager.runInstagramAgent();
+    // 🧠 Brain pieņem lēmumu
+    const decision = brain.decide();
+
+    // 🤖 AgentManager izpilda Brain lēmumu
+    const result = agentManager.run(decision);
 
     contentStore.clear();
-    contentStore.add(result.story.title);
-    contentStore.add(result.post.title);
-    contentStore.add(result.caption);
-    contentStore.add(result.hashtags.join(" "));
+
+    result.queueItems.forEach((item) => {
+      contentStore.add(item);
+    });
 
     brain.setStatus("complete");
 
     return {
-      message: "Instagram Agent completed.",
+      message: result.message,
       queueCount: contentStore.getQueueCount(),
       logs: [
         "AI Session started",
-        "Loading Instagram Agent",
-        `Story created: ${result.story.title}`,
-        `Post created: ${result.post.title}`,
-        "Caption created",
-        "Hashtags generated",
+        ...result.logs,
         "Content saved to queue",
         "Session completed",
       ],

@@ -1,50 +1,47 @@
 import { BrainStatus } from "@/types/brainStatus";
+import { BrainDecision } from "@/types/brainDecision";
 
-export class Brain {
+class Brain {
   private status: BrainStatus = "idle";
 
-  getStatus() {
-    return this.status;
+  think() {
+    return {
+      status: this.status,
+      message:
+        this.status === "thinking"
+          ? "Thinking..."
+          : this.status === "complete"
+          ? "Task completed."
+          : "Ready for next task.",
+      provider: "Not connected",
+      timestamp: Date.now(),
+    };
   }
+
+  decide(): BrainDecision {
+  const hour = new Date().getHours();
+
+  if (hour >= 18) {
+    return {
+      task: "analytics-report",
+      reason: "Evening analytics review.",
+      agent: "AnalyticsAgent",
+    };
+  }
+
+  return {
+    task: "instagram-content",
+    reason: "Daily Instagram content scheduled.",
+    agent: "InstagramAgent",
+  };
+}
 
   setStatus(status: BrainStatus) {
     this.status = status;
   }
 
-  think() {
-    return {
-      status: this.status,
-      message: this.getMessage(),
-      provider: "Not connected",
-    };
-  }
-
-  private getMessage() {
-    switch (this.status) {
-      case "idle":
-        return "Waiting for command.";
-
-      case "thinking":
-        return "Thinking...";
-
-      case "story":
-        return "Generating Story...";
-
-      case "caption":
-        return "Creating Caption...";
-
-      case "image":
-        return "Creating Image Prompt...";
-
-      case "complete":
-        return "Task completed.";
-
-      case "error":
-        return "Something went wrong.";
-
-      default:
-        return "Unknown.";
-    }
+  getStatus() {
+    return this.status;
   }
 }
 
