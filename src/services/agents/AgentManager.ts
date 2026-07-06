@@ -1,8 +1,6 @@
 import { Agent, AgentResult } from "@/types/agent";
 import { BrainDecision } from "@/types/brainDecision";
-
-import { instagramAgent } from "./InstagramAgent";
-import { analyticsAgent } from "./AnalyticsAgent";
+import { taskRegistry } from "@/services/registry/TaskRegistry";
 
 type ManagedAgentResult = AgentResult & {
   agent: string;
@@ -10,23 +8,18 @@ type ManagedAgentResult = AgentResult & {
 
 export class AgentManager {
   run(decision: BrainDecision): ManagedAgentResult {
-    switch (decision.task.type) {
-      case "generate-story":
-      case "create-caption":
-      case "create-image-prompt":
-        return this.runAgent(decision.task.reason, instagramAgent);
+    const agent = taskRegistry.resolve(decision.task.type);
 
-      case "analyze-performance":
-        return this.runAgent(decision.task.reason, analyticsAgent);
-
-      default:
-        return {
-          agent: "Unknown",
-          message: "No matching task.",
-          queueItems: [],
-          logs: ["No matching task."],
-        };
+    if (!agent) {
+      return {
+        agent: "Unknown",
+        message: "No matching task.",
+        queueItems: [],
+        logs: [`No agent found for task: ${decision.task.type}`],
+      };
     }
+
+    return this.runAgent(decision.task.reason, agent);
   }
 
   private runAgent(reason: string, agent: Agent): ManagedAgentResult {
@@ -36,10 +29,7 @@ export class AgentManager {
       agent: agent.name,
       message: result.message,
       queueItems: result.queueItems,
-      logs: [
-        `Task: ${reason}`,
-        ...result.logs,
-      ],
+      logs: [`Task: ${reason}`, ...result.logs],
     };
   }
 }
