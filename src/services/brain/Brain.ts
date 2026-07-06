@@ -19,22 +19,26 @@ class Brain {
   }
 
   decide(): BrainDecision {
-  const hour = new Date().getHours();
+    const hour = new Date().getHours();
 
-  if (hour >= 18) {
+    if (hour >= 18) {
+      return {
+        task: {
+          type: "analyze-performance",
+          reason: "Evening analytics review.",
+          priority: "medium",
+        },
+      };
+    }
+
     return {
-      task: "analytics-report",
-      reason: "Evening analytics review.",
-      agent: "AnalyticsAgent",
+      task: {
+        type: "generate-story",
+        reason: "Daily content creation.",
+        priority: "high",
+      },
     };
   }
-
-  return {
-    task: "instagram-content",
-    reason: "Daily Instagram content scheduled.",
-    agent: "InstagramAgent",
-  };
-}
 
   setStatus(status: BrainStatus) {
     this.status = status;
