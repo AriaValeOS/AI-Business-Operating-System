@@ -1,6 +1,6 @@
 import { BrainStatus } from "@/types/brainStatus";
 import { BrainDecision } from "@/types/brainDecision";
-
+import { taskFactory } from "@/services/tasks/TaskFactory";
 class Brain {
   private status: BrainStatus = "idle";
 
@@ -19,26 +19,26 @@ class Brain {
   }
 
   decide(): BrainDecision {
-    const hour = new Date().getHours();
+  const hour = new Date().getHours();
 
-    if (hour >= 18) {
-      return {
-        task: {
-          type: "analyze-performance",
-          reason: "Evening analytics review.",
-          priority: "medium",
-        },
-      };
-    }
-
+  if (hour >= 18) {
     return {
-      task: {
-        type: "generate-story",
-        reason: "Daily content creation.",
-        priority: "high",
-      },
+      task: taskFactory.create({
+        type: "analyze-performance",
+        reason: "Evening analytics review.",
+        priority: "medium",
+      }),
     };
   }
+
+  return {
+    task: taskFactory.create({
+      type: "generate-story",
+      reason: "Daily content creation.",
+      priority: "high",
+    }),
+  };
+}
 
   setStatus(status: BrainStatus) {
     this.status = status;

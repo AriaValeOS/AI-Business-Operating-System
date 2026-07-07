@@ -1,65 +1,67 @@
-# AI Business Operating System
-
-## Vision
-
-Build the operating system for AI-powered businesses.
-
-Our mission is to create a modular platform where specialized AI employees can run an entire business.
-
-Instead of one AI assistant, the system will manage an entire AI workforce.
-
----
+# AI Business Operating System Vision
 
 ## Mission
 
-Every repetitive business task should be executable by AI.
+Build the operating system for AI-powered businesses.
 
-Humans become managers.
-
-AI becomes the workforce.
+Enable entrepreneurs to run their companies with teams of specialized AI employees.
 
 ---
 
-## Long-term Goal
+## Vision
 
-A business owner should be able to press one button:
+A future where every business has an AI workforce.
 
-"Run Today's Business"
+Humans focus on strategy.
 
-The platform will:
+AI executes operations.
 
-- Analyze analytics
-- Generate content
-- Create images
-- Publish posts
-- Reply to customers
-- Schedule meetings
-- Send emails
-- Update CRM
-- Produce reports
+---
 
-without human intervention.
+## Product Goal
+
+Create the world's most modular AI Business Operating System.
+
+---
+
+## Long-term Goals
+
+- AI Workforce
+- Business Automation
+- Knowledge System
+- Memory
+- CRM
+- Finance
+- Marketing
+- Analytics
+- Sales
+- Support
 
 ---
 
 ## Core Principles
 
-Brain decides.
+- AI First
+- Human in Control
+- Modular Architecture
+- Long-term Thinking
+- Quality over Speed
+- Business before Technology
 
-Tasks describe work.
+---
 
-Registry finds the right employee.
+## Success Definition
 
-Agents execute.
+A business owner can open AI Business Operating System every morning and immediately see:
 
-Services connect external systems.
-
-UI visualizes the business.
+- what AI completed overnight;
+- what requires human attention;
+- what AI recommends doing next.
 
 ---
 
 ## Motto
 
-One Platform.
+Build once.
 
-Unlimited AI Employees.
+Scale forever.
