@@ -1,15 +1,20 @@
 export const appConfig = {
-  name: "Aria OS",
+  // Product
+  name: "AI Business OS",
+  version: "0.2.0",
 
-  tagline: "AI Business Operating System",
+  // Branding
+  tagline: "The Operating System for AI-Powered Businesses",
 
-  founder: "Founder",
+  // Founder
+  founder: "Mārtiņš K.",
 
-  project: "Aria",
+  // AI Workforce
+  primaryEmployee: "Aria",
 
-  version: "0.3.0",
+  // Company
+  company: "AI Business OS",
 
-  company: "Aria OS",
-
-  status: "Development",
-};
+  // Environment
+  environment: "development",
+} as const;
