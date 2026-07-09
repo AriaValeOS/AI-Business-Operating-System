@@ -1,5 +1,6 @@
 import Card from "@/components/ui/Card";
 import { workforceService } from "@/services/employees/WorkforceService";
+import StatusBadge from "@/components/ui/StatusBadge";
 
 export default function ProjectCard() {
   const employees = workforceService.getAll();
@@ -19,9 +20,9 @@ export default function ProjectCard() {
               Department: {employee.department}
             </p>
 
-            <p className="text-sm text-zinc-500">
-              Status: {employee.status}
-            </p>
+            <div className="mt-2">
+  <StatusBadge status={employee.status} />
+</div>
 
             <p className="text-sm text-zinc-600">
               Model: {employee.aiModel}

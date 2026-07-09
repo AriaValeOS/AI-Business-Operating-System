@@ -14,6 +14,7 @@ import AssistantCard from "./cards/AssistantCard";
 import BrainCard from "./cards/BrainCard";
 import ActivityCard from "./cards/ActivityCard";
 import ConsoleCard from "./cards/ConsoleCard";
+import KpiCard from "./cards/KpiCard";
 
 export default function CommandCenter() {
   const demo = runBusinessCycleDemo();
@@ -54,11 +55,7 @@ export default function CommandCenter() {
           Good evening, {appConfig.founder} 👋
         </h1>
 
-        <p className="text-zinc-400 mt-2">Welcome back.</p>
-
-        <p className="text-zinc-500 text-sm mt-1">
-          Here&apos;s your business overview for today.
-        </p>
+        <p className="text-zinc-400 mt-2">{appConfig.tagline}</p>
 
         <p className="text-xs text-zinc-600 mt-4">{today}</p>
       </div>
@@ -86,20 +83,35 @@ export default function CommandCenter() {
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-6">
+      {/* Goal */}
+      <div className="mb-6">
         <MissionCard />
+      </div>
 
+      {/* Main Dashboard */}
+      <div className="grid grid-cols-2 gap-6">
         <ProjectCard />
 
         <QueueCard queueCount={queueCount} />
 
-        <AssistantCard onSessionComplete={handleSessionComplete} />
+        <KpiCard />
 
         <BrainCard brainStatus={brainStatus} />
+      </div>
 
+      {/* Activity */}
+      <div className="mt-6">
         <ActivityCard items={activities} />
+      </div>
 
+      {/* Console */}
+      <div className="mt-6">
         <ConsoleCard logs={logs} />
+      </div>
+
+      {/* Assistant */}
+      <div className="mt-6">
+        <AssistantCard onSessionComplete={handleSessionComplete} />
       </div>
     </div>
   );
