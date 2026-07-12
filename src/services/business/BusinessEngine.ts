@@ -3,15 +3,38 @@ import { BusinessDayResult } from "@/types/business";
 
 class BusinessEngine {
   startBusinessDay(): BusinessDayResult {
-    const result = aiSession.run();
+    const lifecycleLogs: string[] = [];
+
+    this.runMorningBriefing(lifecycleLogs);
+
+    const result = this.executeBusinessCycle();
+
+    this.updateKPIs(lifecycleLogs);
+    this.finishBusinessDay(lifecycleLogs);
 
     return {
       status: "completed",
       message: result.message,
       queueCount: result.queueCount,
-      logs: result.logs,
+      logs: [...lifecycleLogs, ...result.logs],
       completedAt: Date.now(),
     };
+  }
+
+  private runMorningBriefing(logs: string[]) {
+    logs.push("Morning briefing completed.");
+  }
+
+  private executeBusinessCycle() {
+    return aiSession.run();
+  }
+
+  private updateKPIs(logs: string[]) {
+    logs.push("KPIs updated.");
+  }
+
+  private finishBusinessDay(logs: string[]) {
+    logs.push("Business day completed.");
   }
 }
 

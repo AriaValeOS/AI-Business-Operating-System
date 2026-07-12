@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import DashboardStats from "@/components/dashboard/DashboardStats";
 
 import { brain } from "@/services/brain/Brain";
 import { businessEngine } from "@/services/business/BusinessEngine";
@@ -40,6 +41,12 @@ export default function CommandCenter() {
       ]);
 
       setLogs(result.logs);
+      setActivities((prev) => [
+  ...result.logs.map(
+    (log) => `${time} • ${log}`
+  ),
+  ...prev,
+]);
       setIsCompleted(true);
       setIsRunning(false);
     }, 1500);
@@ -54,7 +61,9 @@ export default function CommandCenter() {
           isCompleted={isCompleted}
         />
       </div>
-
+<div className="mb-6">
+  <DashboardStats />
+</div>
       <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
         <ProjectCard />
         <QueueCard queueCount={queueCount} />

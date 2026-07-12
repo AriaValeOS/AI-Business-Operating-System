@@ -1,6 +1,7 @@
 import ProgressBar from "@/components/ui/ProgressBar";
 import { goalService } from "@/services/goals/GoalService";
 
+import { morningBriefingService } from "@/services/business/MorningBriefingService";
 type HeroWidgetProps = {
   onStartBusinessDay: () => void;
   isRunning: boolean;
@@ -12,7 +13,7 @@ export default function HeroWidget({
   isCompleted,
 }: HeroWidgetProps) {
  const goal = goalService.getActiveGoal();
-
+const briefing = morningBriefingService.getBriefing();
 const progress = Math.round(
   (goal.kpi.current / goal.kpi.target) * 100
 );
@@ -21,21 +22,27 @@ const progress = Math.round(
       <div className="flex items-start justify-between">
         <div>
           <p className="text-sm font-medium text-blue-400">
-            Today&apos;s Focus
+            {briefing.greeting}
           </p>
 
           <h2 className="mt-2 text-3xl font-bold tracking-tight text-white">
-            {goal.title}
+            {briefing.title}
           </h2>
 
           <p className="mt-3 max-w-xl text-zinc-400">
-  Your AI Workforce is currently preparing today&apos;s marketing
-  campaign. Review the plan and start the business day when ready.
-</p>
+            {briefing.summary}
+          </p>
+          <div className="mt-4 flex items-center gap-2">
+  <span className="h-2 w-2 rounded-full bg-emerald-400" />
+
+  <span className="text-sm text-zinc-400">
+    Business Health: {briefing.businessHealth}
+  </span>
+</div>
         </div>
 
         <span className="rounded-full bg-red-500/15 px-3 py-1 text-xs font-semibold text-red-300">
-          {goal.priority.toUpperCase()} PRIORITY
+          {briefing.priority.toUpperCase()} PRIORITY
         </span>
       </div>
 

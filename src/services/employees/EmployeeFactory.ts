@@ -1,9 +1,10 @@
 import {
-  Employee,
-  Capability,
   Access,
+  Capability,
+  Employee,
 } from "@/types/employee";
 import { Department } from "@/types/goal";
+
 type CreateEmployeeInput = {
   name: string;
   department: Department;
@@ -11,6 +12,8 @@ type CreateEmployeeInput = {
   capabilities: Capability[];
   aiModel: string;
   access: Access[];
+  currentTask?: string;
+  progress?: number;
 };
 
 class EmployeeFactory {
@@ -26,6 +29,8 @@ class EmployeeFactory {
       status: "idle",
       aiModel: input.aiModel,
       access: input.access,
+      currentTask: input.currentTask,
+      progress: input.progress,
       createdAt: now,
       updatedAt: now,
     };

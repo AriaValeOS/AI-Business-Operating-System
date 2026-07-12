@@ -13,7 +13,8 @@ export type Department =
   | "finance"
   | "operations"
   | "support"
-  | "analytics";
+  | "analytics"
+  | "research";
 
 export type KPI = {
   metric: string;

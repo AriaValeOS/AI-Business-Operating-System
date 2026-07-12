@@ -10,6 +10,7 @@ export default function StatusBadge({ status }: StatusBadgeProps) {
     idle: "bg-zinc-700 text-zinc-300",
     offline: "bg-red-500/20 text-red-400",
     "waiting-for-approval": "bg-yellow-500/20 text-yellow-400",
+    completed: "bg-emerald-500/20 text-emerald-400",
   };
 
   const labels: Record<EmployeeStatus, string> = {
@@ -17,6 +18,7 @@ export default function StatusBadge({ status }: StatusBadgeProps) {
     idle: "Idle",
     offline: "Offline",
     "waiting-for-approval": "Waiting",
+    completed: "Completed",
   };
 
   return (

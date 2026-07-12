@@ -1,19 +1,18 @@
-import { companyService } from "@/services/company/CompanyService";
 import { goalService } from "@/services/goals/GoalService";
-import { taskService } from "@/services/tasks/TaskService";
-import { workforceService } from "@/services/employees/WorkforceService";
-
-import { DashboardState } from "@/types/dashboard";
+import { employeeService } from "@/services/employees/EmployeeService";
 
 class DashboardService {
-  getState(): DashboardState {
-    const activeGoal = goalService.getActiveGoal();
+  getStats() {
+    const goal = goalService.getActiveGoal();
+    const employees = employeeService.getEmployees();
 
     return {
-      company: companyService.getCompany(),
-      activeGoal,
-      employees: workforceService.getAll(),
-      tasks: taskService.getTasksForGoal(activeGoal),
+      activeGoals: goal.status === "completed" ? 0 : 1,
+      workforce: employees.length,
+      activeTasks: employees.filter(
+        (employee) => employee.currentTask
+      ).length,
+      businessHealth: "Healthy",
     };
   }
 }

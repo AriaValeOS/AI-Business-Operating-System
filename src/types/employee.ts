@@ -3,6 +3,7 @@ import { Department } from "@/types/goal";
 export type EmployeeStatus =
   | "idle"
   | "working"
+  | "completed"
   | "offline"
   | "waiting-for-approval";
 
@@ -28,10 +29,16 @@ export type Employee = {
   name: string;
   department: Department;
   role: string;
+
   capabilities: Capability[];
   status: EmployeeStatus;
+
   aiModel: string;
   access: Access[];
+
+  currentTask?: string;
+  progress?: number;
+
   createdAt: number;
   updatedAt: number;
 };
