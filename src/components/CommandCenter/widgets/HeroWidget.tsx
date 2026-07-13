@@ -3,6 +3,7 @@ import { goalService } from "@/services/goals/GoalService";
 import InfoRow from "@/components/ui/InfoRow";
 import { dashboardService } from "@/services/dashboard/DashboardService";
 import { morningBriefingService } from "@/services/business/MorningBriefingService";
+import { recommendationService } from "@/services/business/RecommendationService";
 type HeroWidgetProps = {
   onStartBusinessDay: () => void;
   isRunning: boolean;
@@ -13,9 +14,11 @@ export default function HeroWidget({
   isRunning,
   isCompleted,
 }: HeroWidgetProps) {
- const goal = goalService.getActiveGoal();
+  const goal = goalService.getActiveGoal();
 const briefing = morningBriefingService.getBriefing();
 const stats = dashboardService.getStats();
+const recommendation =
+  recommendationService.getRecommendation();
 const progress = Math.round(
   (goal.kpi.current / goal.kpi.target) * 100
 );
@@ -103,6 +106,31 @@ const progress = Math.round(
     label="Business Health"
     value={stats.businessHealth}
   />
+</div>
+<div className="mt-6 rounded-2xl border border-blue-500/15 bg-blue-500/5 p-4">
+  <p className="text-xs font-semibold uppercase tracking-wider text-blue-300">
+    AI Recommendation
+  </p>
+
+  <div className="mt-6 rounded-2xl border border-blue-500/15 bg-blue-500/5 p-4">
+  <p className="text-xs font-semibold uppercase tracking-wider text-blue-300">
+    AI Recommendation
+  </p>
+
+  <h3 className="mt-2 font-semibold text-white">
+    {recommendation.title}
+  </h3>
+
+  <p className="mt-2 text-sm leading-6 text-zinc-300">
+    {recommendation.message}
+  </p>
+
+  {recommendation.action && (
+    <p className="mt-3 text-sm font-medium text-blue-300">
+      Recommended action: {recommendation.action}
+    </p>
+  )}
+</div>
 </div>
       <button
   onClick={onStartBusinessDay}

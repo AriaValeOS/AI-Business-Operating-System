@@ -1,4 +1,8 @@
-import { Capability, Employee } from "@/types/employee";
+import {
+  Capability,
+  Employee,
+  EmployeeStatus,
+} from "@/types/employee";
 import { Department } from "@/types/goal";
 import { workforce } from "./WorkforceRegistry";
 
@@ -29,6 +33,47 @@ class WorkforceService {
           employee.capabilities.includes(capability)
       ) ?? null
     );
+  }
+
+  updateStatus(
+    employeeId: string,
+    status: EmployeeStatus
+  ): Employee | null {
+    const employee = workforce.find(
+      (item) => item.id === employeeId
+    );
+
+    if (!employee) {
+      return null;
+    }
+
+    employee.status = status;
+    employee.updatedAt = Date.now();
+
+    return employee;
+  }
+
+  updateAllStatuses(status: EmployeeStatus): Employee[] {
+    const now = Date.now();
+
+    workforce.forEach((employee) => {
+      employee.status = status;
+      employee.updatedAt = now;
+    });
+
+    return workforce;
+  }
+
+  startWorkforce(): Employee[] {
+    return this.updateAllStatuses("working");
+  }
+
+  completeWorkforce(): Employee[] {
+    return this.updateAllStatuses("completed");
+  }
+
+  resetWorkforce(): Employee[] {
+    return this.updateAllStatuses("idle");
   }
 }
 

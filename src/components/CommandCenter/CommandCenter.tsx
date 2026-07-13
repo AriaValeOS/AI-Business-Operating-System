@@ -21,10 +21,11 @@ export default function CommandCenter() {
   const [logs, setLogs] = useState<string[]>([]);
   const [isRunning, setIsRunning] = useState(false);
   const [isCompleted, setIsCompleted] = useState(false);
-
+const [, setDashboardVersion] = useState(0);
   function handleSessionComplete() {
     setIsCompleted(false);
     setIsRunning(true);
+    setDashboardVersion((version) => version + 1);
 
     setTimeout(() => {
       const result = businessEngine.startBusinessDay();
