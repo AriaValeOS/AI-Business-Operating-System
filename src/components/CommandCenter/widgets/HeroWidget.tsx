@@ -1,6 +1,7 @@
 import ProgressBar from "@/components/ui/ProgressBar";
 import { goalService } from "@/services/goals/GoalService";
-
+import InfoRow from "@/components/ui/InfoRow";
+import { dashboardService } from "@/services/dashboard/DashboardService";
 import { morningBriefingService } from "@/services/business/MorningBriefingService";
 type HeroWidgetProps = {
   onStartBusinessDay: () => void;
@@ -14,6 +15,7 @@ export default function HeroWidget({
 }: HeroWidgetProps) {
  const goal = goalService.getActiveGoal();
 const briefing = morningBriefingService.getBriefing();
+const stats = dashboardService.getStats();
 const progress = Math.round(
   (goal.kpi.current / goal.kpi.target) * 100
 );
@@ -86,6 +88,22 @@ const progress = Math.round(
   ✔ Today&apos;s business cycle completed successfully.
 </p>
 )}
+     <div className="mt-8 rounded-2xl border border-white/5 bg-white/[0.02] p-4">
+  <InfoRow
+    label="AI Employees Ready"
+    value={stats.workforce}
+  />
+
+  <InfoRow
+    label="Active Tasks"
+    value={stats.activeTasks}
+  />
+
+  <InfoRow
+    label="Business Health"
+    value={stats.businessHealth}
+  />
+</div>
       <button
   onClick={onStartBusinessDay}
   disabled={isRunning}

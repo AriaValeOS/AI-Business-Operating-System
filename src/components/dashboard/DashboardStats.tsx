@@ -9,7 +9,13 @@ import KpiWidget from "./KpiWidget";
 import { dashboardService } from "@/services/dashboard/DashboardService";
 export default function DashboardStats() {
   const stats = dashboardService.getStats();
-
+const healthTone =
+  stats.businessHealth === "Healthy"
+    ? "success"
+    : stats.businessHealth === "Warning"
+      ? "warning"
+      : "danger";
+    
   return (
     <section className="grid grid-cols-1 gap-4 md:grid-cols-2 2xl:grid-cols-4">
       <KpiWidget
@@ -36,8 +42,9 @@ export default function DashboardStats() {
       <KpiWidget
         title="Business Health"
         value={stats.businessHealth}
-        subtitle="All systems operational"
+        subtitle={stats.businessHealthReason}
         icon={<Activity className="h-6 w-6" />}
+        tone={healthTone}
       />
     </section>
   );
