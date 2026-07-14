@@ -1,4 +1,6 @@
 import AnimatedNumber from "@/components/ui/AnimatedNumber";
+import { dashboardDensity } from "@/styles/designTokens";
+
 type KpiTone = "default" | "success" | "warning" | "danger";
 
 type KpiWidgetProps = {
@@ -50,31 +52,45 @@ export default function KpiWidget({
 
   return (
     <section
-      className={`rounded-3xl border bg-white/[0.025] p-6 shadow-[0_20px_60px_rgba(0,0,0,0.16)] transition-all duration-300 hover:bg-white/[0.035] ${styles.border}`}
+      className={`
+        ${dashboardDensity.cardRadius}
+        ${dashboardDensity.cardPadding}
+        ${dashboardDensity.compactCardMinHeight}
+        border bg-white/[0.025]
+        shadow-[0_16px_40px_rgba(0,0,0,0.14)]
+        transition-all duration-300
+        hover:-translate-y-0.5
+        hover:bg-white/[0.035]
+        ${styles.border}
+      `}
     >
-      <div className="flex items-start justify-between gap-5">
+      <div className="flex h-full items-start justify-between gap-4">
         <div className="min-w-0">
-          <p className="text-sm font-medium text-zinc-500">
+          <p className="text-xs font-medium text-zinc-500">
             {title}
           </p>
 
-          <h2 className={`mt-3 text-3xl font-bold tracking-tight ${styles.value}`}>
+          <h2
+            className={`mt-2 text-2xl font-bold tracking-tight ${styles.value}`}
+          >
             {typeof value === "number" ? (
-  <AnimatedNumber value={value} />
-) : (
-  value
-)}
+              <AnimatedNumber value={value} />
+            ) : (
+              value
+            )}
           </h2>
 
-          <p className="mt-3 text-sm leading-5 text-zinc-400">
+          <p className="mt-2 line-clamp-2 text-xs leading-5 text-zinc-400">
             {subtitle}
           </p>
         </div>
 
         <div
-          className={`flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl ${styles.icon}`}
+          className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl ${styles.icon}`}
         >
-          {icon}
+          <div className="[&>svg]:h-5 [&>svg]:w-5">
+            {icon}
+          </div>
         </div>
       </div>
     </section>

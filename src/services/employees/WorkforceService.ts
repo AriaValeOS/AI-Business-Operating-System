@@ -7,6 +7,25 @@ import { Department } from "@/types/goal";
 import { workforce } from "./WorkforceRegistry";
 
 class WorkforceService {
+  setEmployeeStatus(
+  employeeId: string,
+  status: Employee["status"]
+): void {
+  const employee = workforce.find(
+    (employee) => employee.id === employeeId
+  );
+
+  if (employee) {
+    employee.status = status;
+  }
+}
+setAllEmployeesStatus(
+  status: Employee["status"]
+): void {
+  workforce.forEach((employee) => {
+    employee.status = status;
+  });
+}
   getAll(): Employee[] {
     return workforce;
   }

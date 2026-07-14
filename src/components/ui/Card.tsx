@@ -1,3 +1,5 @@
+import { dashboardDensity } from "@/styles/designTokens";
+
 type CardProps = {
   title: string;
   children: React.ReactNode;
@@ -11,9 +13,20 @@ export default function Card({
 }: CardProps) {
   return (
     <section
-      className={`rounded-3xl border border-white/5 bg-white/[0.025] p-6 shadow-[0_20px_60px_rgba(0,0,0,0.18)] transition-all duration-300 hover:border-white/10 hover:bg-white/[0.035] ${className}`}
+      className={`
+        ${dashboardDensity.cardRadius}
+        ${dashboardDensity.cardPadding}
+        border border-white/5
+        bg-white/[0.025]
+        shadow-[0_20px_60px_rgba(0,0,0,0.18)]
+        transition-all duration-300
+        hover:border-white/10
+        hover:bg-white/[0.035]
+        hover:-translate-y-0.5
+        ${className}
+      `}
     >
-      <div className="mb-5 flex items-center justify-between">
+      <div className="mb-4 flex items-center justify-between">
         <h2 className="text-base font-semibold tracking-tight text-white">
           {title}
         </h2>

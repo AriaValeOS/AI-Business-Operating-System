@@ -1,154 +1,245 @@
-import ProgressBar from "@/components/ui/ProgressBar";
-import { goalService } from "@/services/goals/GoalService";
+import {
+  CheckCircle2,
+  LoaderCircle,
+  Play,
+} from "lucide-react";
+
 import InfoRow from "@/components/ui/InfoRow";
-import { dashboardService } from "@/services/dashboard/DashboardService";
+import ProgressBar from "@/components/ui/ProgressBar";
+
+import { dashboardDensity } from "@/styles/designTokens";
+
+import { businessStateService } from "@/services/business/BusinessStateService";
 import { morningBriefingService } from "@/services/business/MorningBriefingService";
 import { recommendationService } from "@/services/business/RecommendationService";
+import { dashboardService } from "@/services/dashboard/DashboardService";
+import { goalService } from "@/services/goals/GoalService";
+
 type HeroWidgetProps = {
   onStartBusinessDay: () => void;
   isRunning: boolean;
   isCompleted: boolean;
 };
+
 export default function HeroWidget({
   onStartBusinessDay,
   isRunning,
   isCompleted,
 }: HeroWidgetProps) {
   const goal = goalService.getActiveGoal();
-const briefing = morningBriefingService.getBriefing();
-const stats = dashboardService.getStats();
-const recommendation =
-  recommendationService.getRecommendation();
-const progress = Math.round(
-  (goal.kpi.current / goal.kpi.target) * 100
-);
-  return (
-    <section className="rounded-3xl border border-white/5 bg-white/[0.03] p-8">
-      <div className="flex items-start justify-between">
-        <div>
-          <p className="text-sm font-medium text-blue-400">
-            {briefing.greeting}
-          </p>
+  const briefing = morningBriefingService.getBriefing();
+  const stats = dashboardService.getStats();
+  const recommendation = recommendationService.getRecommendation();
 
-          <h2 className="mt-2 text-3xl font-bold tracking-tight text-white">
+  const storedBusinessState = businessStateService.getState();
+
+  const businessState = isRunning
+    ? "running"
+    : isCompleted
+      ? "completed"
+      : storedBusinessState;
+
+  const progress =
+    goal.kpi.target > 0
+      ? Math.round(
+          (goal.kpi.current / goal.kpi.target) * 100
+        )
+      : 0;
+
+  const businessStateConfig = {
+    idle: {
+      label: "Business Idle",
+      dot: "bg-zinc-400",
+      badge:
+        "border-white/10 bg-white/[0.04] text-zinc-300",
+    },
+    running: {
+      label: "Business Running",
+      dot: "bg-emerald-400 animate-pulse",
+      badge:
+        "border-emerald-500/20 bg-emerald-500/10 text-emerald-300",
+    },
+    completed: {
+      label: "Business Day Completed",
+      dot: "bg-blue-400",
+      badge:
+        "border-blue-500/20 bg-blue-500/10 text-blue-300",
+    },
+  } as const;
+
+  const currentState = businessStateConfig[businessState];
+
+  return (
+    <section
+      className={`
+        ${dashboardDensity.cardRadius}
+        ${dashboardDensity.heroPadding}
+        border border-white/5
+        bg-white/[0.03]
+        shadow-[0_20px_60px_rgba(0,0,0,0.16)]
+      `}
+    >
+      <div className="flex items-start justify-between gap-5">
+        <div className="min-w-0">
+          <div className="flex flex-wrap items-center gap-2">
+            <p className="text-xs font-medium text-blue-400">
+              {briefing.greeting}
+            </p>
+
+            <span
+              className={`inline-flex items-center gap-2 rounded-full border px-2.5 py-1 text-[11px] font-medium ${currentState.badge}`}
+            >
+              <span
+                className={`h-1.5 w-1.5 rounded-full ${currentState.dot}`}
+              />
+
+              {currentState.label}
+            </span>
+          </div>
+
+          <h2
+            className={`mt-2 font-bold tracking-tight text-white ${dashboardDensity.title}`}
+          >
             {briefing.title}
           </h2>
 
-          <p className="mt-3 max-w-xl text-zinc-400">
+          <p className="mt-2 max-w-2xl text-sm leading-6 text-zinc-400">
             {briefing.summary}
           </p>
-          <div className="mt-4 flex items-center gap-2">
-  <span className="h-2 w-2 rounded-full bg-emerald-400" />
 
-  <span className="text-sm text-zinc-400">
-    Business Health: {briefing.businessHealth}
-  </span>
-</div>
+          <div className="mt-3 flex items-center gap-2">
+            <span
+              className={`h-1.5 w-1.5 rounded-full ${
+                briefing.businessHealth === "Healthy"
+                  ? "bg-emerald-400"
+                  : briefing.businessHealth === "Warning"
+                    ? "bg-amber-400"
+                    : "bg-red-400"
+              }`}
+            />
+
+            <span className="text-xs text-zinc-400">
+              Business Health: {briefing.businessHealth}
+            </span>
+          </div>
         </div>
 
-        <span className="rounded-full bg-red-500/15 px-3 py-1 text-xs font-semibold text-red-300">
+        <span className="shrink-0 rounded-full bg-red-500/15 px-2.5 py-1 text-[11px] font-semibold text-red-300">
           {briefing.priority.toUpperCase()} PRIORITY
         </span>
       </div>
 
-      <div className="mt-8 grid grid-cols-3 gap-6">
+      <div className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-3">
         <div>
-          <p className="text-xs uppercase tracking-wider text-zinc-500">
+          <p className="text-[10px] uppercase tracking-[0.16em] text-zinc-500">
             Department
           </p>
 
-          <p className="mt-2 text-lg font-semibold">
+          <p className="mt-1 text-base font-semibold capitalize text-white">
             {goal.department}
           </p>
         </div>
 
         <div>
-          <p className="text-xs uppercase tracking-wider text-zinc-500">
+          <p className="text-[10px] uppercase tracking-[0.16em] text-zinc-500">
             Owner
           </p>
 
-          <p className="mt-2 text-lg font-semibold">
+          <p className="mt-1 text-base font-semibold text-white">
             Aria
           </p>
         </div>
 
         <div>
-          <p className="text-xs uppercase tracking-wider text-zinc-500">
+          <p className="text-[10px] uppercase tracking-[0.16em] text-zinc-500">
             Progress
           </p>
 
-          <p className="mt-2 text-lg font-semibold">
-           {progress}%
+          <p className="mt-1 text-base font-semibold text-white">
+            {progress}%
           </p>
         </div>
       </div>
 
-      <div className="mt-5">
+      <div className="mt-3">
         <ProgressBar value={progress} />
       </div>
-{isCompleted && (
-  <p className="mt-4 text-sm text-emerald-400">
-  ✔ Today&apos;s business cycle completed successfully.
-</p>
-)}
-     <div className="mt-8 rounded-2xl border border-white/5 bg-white/[0.02] p-4">
-  <InfoRow
-    label="AI Employees Ready"
-    value={stats.workforce}
-  />
 
-  <InfoRow
-    label="Active Tasks"
-    value={stats.activeTasks}
-  />
+      {isCompleted && (
+        <p className="mt-3 flex items-center gap-2 text-xs text-emerald-400">
+          <CheckCircle2 className="h-3.5 w-3.5" />
+          Today&apos;s business cycle completed successfully.
+        </p>
+      )}
 
-  <InfoRow
-    label="Business Health"
-    value={stats.businessHealth}
-  />
-</div>
-<div className="mt-6 rounded-2xl border border-blue-500/15 bg-blue-500/5 p-4">
-  <p className="text-xs font-semibold uppercase tracking-wider text-blue-300">
-    AI Recommendation
-  </p>
+      <div className="mt-5 grid grid-cols-1 gap-4 xl:grid-cols-2">
+        <div className="rounded-2xl border border-white/5 bg-white/[0.015] px-4 py-2">
+          <InfoRow
+            label="AI Employees Ready"
+            value={stats.workforce}
+          />
 
-  <div className="mt-6 rounded-2xl border border-blue-500/15 bg-blue-500/5 p-4">
-  <p className="text-xs font-semibold uppercase tracking-wider text-blue-300">
-    AI Recommendation
-  </p>
+          <InfoRow
+            label="Active Tasks"
+            value={stats.activeTasks}
+          />
 
-  <h3 className="mt-2 font-semibold text-white">
-    {recommendation.title}
-  </h3>
+          <InfoRow
+            label="Business Health"
+            value={stats.businessHealth}
+          />
+        </div>
 
-  <p className="mt-2 text-sm leading-6 text-zinc-300">
-    {recommendation.message}
-  </p>
+        <div className="rounded-2xl border border-blue-500/15 bg-blue-500/5 p-4">
+          <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-blue-300">
+            AI Recommendation
+          </p>
 
-  {recommendation.action && (
-    <p className="mt-3 text-sm font-medium text-blue-300">
-      Recommended action: {recommendation.action}
-    </p>
-  )}
-</div>
-</div>
+          <h3 className="mt-1.5 text-sm font-semibold text-white">
+            {recommendation.title}
+          </h3>
+
+          <p className="mt-1.5 text-xs leading-5 text-zinc-300">
+            {recommendation.message}
+          </p>
+
+          {recommendation.action && (
+            <p className="mt-2 text-xs font-medium text-blue-300">
+              Recommended action: {recommendation.action}
+            </p>
+          )}
+        </div>
+      </div>
+
       <button
-  onClick={onStartBusinessDay}
-  disabled={isRunning}
-  className={`mt-8 rounded-2xl px-6 py-3 font-semibold text-white transition ${
-    isRunning
-      ? "cursor-not-allowed bg-zinc-700"
-      : isCompleted
-      ? "bg-emerald-600 hover:bg-emerald-500"
-      : "bg-blue-600 hover:bg-blue-500"
-  }`}
->
-  {isRunning
-    ? "⏳ Working..."
-    : isCompleted
-    ? "✔ Business Day Completed"
-    : "▶ Start Business Day"}
-</button>
+        type="button"
+        onClick={onStartBusinessDay}
+        disabled={isRunning}
+        className={`mt-5 inline-flex ${dashboardDensity.buttonHeight} items-center gap-2 rounded-xl px-5 text-sm font-semibold text-white shadow-lg transition-all duration-200 ${
+          isRunning
+            ? "cursor-not-allowed bg-zinc-700 shadow-none"
+            : isCompleted
+              ? "bg-emerald-600 shadow-emerald-600/20 hover:-translate-y-0.5 hover:bg-emerald-500"
+              : "bg-blue-600 shadow-blue-600/20 hover:-translate-y-0.5 hover:bg-blue-500"
+        }`}
+      >
+        {isRunning ? (
+          <>
+            <LoaderCircle className="h-4 w-4 animate-spin" />
+            Working...
+          </>
+        ) : isCompleted ? (
+          <>
+            <CheckCircle2 className="h-4 w-4" />
+            Business Day Completed
+          </>
+        ) : (
+          <>
+            <Play className="h-4 w-4 fill-current" />
+            Start Business Day
+          </>
+        )}
+      </button>
     </section>
   );
 }

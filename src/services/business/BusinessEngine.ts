@@ -1,9 +1,11 @@
 import { aiSession } from "@/services/session/AISession";
 import { BusinessDayResult } from "@/types/business";
 import { workforceService } from "@/services/employees/WorkforceService";
+import { businessStateService } from "./BusinessStateService";
 
 class BusinessEngine {
   startBusinessDay(): BusinessDayResult {
+    businessStateService.setState("running");
   const lifecycleLogs: string[] = [];
 
   this.runMorningBriefing(lifecycleLogs);
@@ -19,6 +21,7 @@ class BusinessEngine {
   lifecycleLogs.push("AI Workforce completed.");
 
   this.finishBusinessDay(lifecycleLogs);
+  businessStateService.setState("completed");
 
   return {
     status: "completed",

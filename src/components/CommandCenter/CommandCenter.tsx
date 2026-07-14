@@ -1,17 +1,18 @@
 "use client";
 
 import { useState } from "react";
-import DashboardStats from "@/components/dashboard/DashboardStats";
 
+import DashboardStats from "@/components/dashboard/DashboardStats";
 import { brain } from "@/services/brain/Brain";
-import { businessEngine } from "@/services/business/BusinessEngine";
-import ProjectCard from "./cards/ProjectCard";
-import QueueCard from "./cards/QueueCard";
+import { businessCycleRunner } from "@/services/business/BusinessCycleRunner";
+
+import ActivityCard from "./cards/ActivityCard";
 import AssistantCard from "./cards/AssistantCard";
 import BrainCard from "./cards/BrainCard";
-import ActivityCard from "./cards/ActivityCard";
 import ConsoleCard from "./cards/ConsoleCard";
 import KpiCard from "./cards/KpiCard";
+import ProjectCard from "./cards/ProjectCard";
+import QueueCard from "./cards/QueueCard";
 import HeroWidget from "./widgets/HeroWidget";
 
 export default function CommandCenter() {
@@ -21,67 +22,81 @@ export default function CommandCenter() {
   const [logs, setLogs] = useState<string[]>([]);
   const [isRunning, setIsRunning] = useState(false);
   const [isCompleted, setIsCompleted] = useState(false);
-const [, setDashboardVersion] = useState(0);
+  const [, setDashboardVersion] = useState(0);
+
+  function refreshDashboard() {
+    setDashboardVersion((version) => version + 1);
+  }
+
   function handleSessionComplete() {
+    if (isRunning) {
+      return;
+    }
+
     setIsCompleted(false);
     setIsRunning(true);
-    setDashboardVersion((version) => version + 1);
 
-    setTimeout(() => {
-      const result = businessEngine.startBusinessDay();
-      const status = brain.think();
-      const time = new Date().toLocaleTimeString();
+    businessCycleRunner.run({
+      onRefresh: refreshDashboard,
 
-      setQueueCount(result.queueCount);
-      setBrainStatus(status);
+      onCompleted: (result) => {
+        const status = brain.think();
+        const time = new Date().toLocaleTimeString();
 
-      setActivities((prev) => [
-        `${time} • ${result.message}`,
-        `${time} • Queue updated (${result.queueCount} items)`,
-        ...prev,
-      ]);
+        setQueueCount(result.queueCount);
+        setBrainStatus(status);
 
-      setLogs(result.logs);
-      setActivities((prev) => [
-  ...result.logs.map(
-    (log) => `${time} • ${log}`
-  ),
-  ...prev,
-]);
-      setIsCompleted(true);
-      setIsRunning(false);
-    }, 1500);
+        setActivities((prev) => [
+          `${time} • ${result.message}`,
+          `${time} • Queue updated (${result.queueCount} items)`,
+          ...result.logs.map(
+            (log: string) => `${time} • ${log}`
+          ),
+          ...prev,
+        ]);
+
+        setLogs(result.logs);
+        setIsRunning(false);
+        setIsCompleted(true);
+
+        refreshDashboard();
+      },
+    });
   }
 
   return (
     <div>
-      <div className="mb-6">
+      <div className="mb-4">
         <HeroWidget
           onStartBusinessDay={handleSessionComplete}
           isRunning={isRunning}
           isCompleted={isCompleted}
         />
       </div>
-<div className="mb-6">
-  <DashboardStats />
-</div>
-      <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
+
+      <div className="mb-4">
+        <DashboardStats />
+      </div>
+
+      <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
         <ProjectCard />
         <QueueCard queueCount={queueCount} />
         <KpiCard />
         <BrainCard brainStatus={brainStatus} />
       </div>
 
-      <div className="mt-6">
+      <div className="mt-4">
         <ActivityCard items={activities} />
       </div>
 
-      <div className="mt-6">
+      <div className="mt-4">
         <ConsoleCard logs={logs} />
       </div>
 
-      <div className="mt-6">
-        <AssistantCard onSessionComplete={handleSessionComplete} />
+      <div className="mt-4">
+        <AssistantCard
+          onSessionComplete={handleSessionComplete}
+        />
       </div>
     </div>
   );
