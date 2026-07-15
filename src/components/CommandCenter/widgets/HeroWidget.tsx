@@ -73,21 +73,21 @@ export default function HeroWidget({
     <section
       className={`
         ${dashboardDensity.cardRadius}
-        ${dashboardDensity.heroPadding}
         border border-white/5
         bg-white/[0.03]
-        shadow-[0_20px_60px_rgba(0,0,0,0.16)]
+        px-5 py-4
+        shadow-[0_16px_44px_rgba(0,0,0,0.14)]
       `}
     >
-      <div className="flex items-start justify-between gap-5">
+      <div className="flex items-start justify-between gap-4">
         <div className="min-w-0">
           <div className="flex flex-wrap items-center gap-2">
-            <p className="text-xs font-medium text-blue-400">
+            <p className="text-[11px] font-medium text-blue-400">
               {briefing.greeting}
             </p>
 
             <span
-              className={`inline-flex items-center gap-2 rounded-full border px-2.5 py-1 text-[11px] font-medium ${currentState.badge}`}
+              className={`inline-flex items-center gap-1.5 rounded-full border px-2 py-0.5 text-[10px] font-medium ${currentState.badge}`}
             >
               <span
                 className={`h-1.5 w-1.5 rounded-full ${currentState.dot}`}
@@ -97,17 +97,15 @@ export default function HeroWidget({
             </span>
           </div>
 
-          <h2
-            className={`mt-2 font-bold tracking-tight text-white ${dashboardDensity.title}`}
-          >
+          <h2 className="mt-1.5 text-2xl font-bold tracking-tight text-white">
             {briefing.title}
           </h2>
 
-          <p className="mt-2 max-w-2xl text-sm leading-6 text-zinc-400">
+          <p className="mt-1.5 max-w-2xl text-xs leading-5 text-zinc-400">
             {briefing.summary}
           </p>
 
-          <div className="mt-3 flex items-center gap-2">
+          <div className="mt-2 flex items-center gap-2">
             <span
               className={`h-1.5 w-1.5 rounded-full ${
                 briefing.businessHealth === "Healthy"
@@ -118,62 +116,62 @@ export default function HeroWidget({
               }`}
             />
 
-            <span className="text-xs text-zinc-400">
+            <span className="text-[11px] text-zinc-400">
               Business Health: {briefing.businessHealth}
             </span>
           </div>
         </div>
 
-        <span className="shrink-0 rounded-full bg-red-500/15 px-2.5 py-1 text-[11px] font-semibold text-red-300">
+        <span className="shrink-0 rounded-full bg-red-500/15 px-2 py-0.5 text-[10px] font-semibold text-red-300">
           {briefing.priority.toUpperCase()} PRIORITY
         </span>
       </div>
 
-      <div className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-3">
+      <div className="mt-4 grid grid-cols-3 gap-3">
         <div>
-          <p className="text-[10px] uppercase tracking-[0.16em] text-zinc-500">
+          <p className="text-[9px] uppercase tracking-[0.14em] text-zinc-500">
             Department
           </p>
 
-          <p className="mt-1 text-base font-semibold capitalize text-white">
+          <p className="mt-0.5 text-sm font-semibold capitalize text-white">
             {goal.department}
           </p>
         </div>
 
         <div>
-          <p className="text-[10px] uppercase tracking-[0.16em] text-zinc-500">
+          <p className="text-[9px] uppercase tracking-[0.14em] text-zinc-500">
             Owner
           </p>
 
-          <p className="mt-1 text-base font-semibold text-white">
+          <p className="mt-0.5 text-sm font-semibold text-white">
             Aria
           </p>
         </div>
 
         <div>
-          <p className="text-[10px] uppercase tracking-[0.16em] text-zinc-500">
+          <p className="text-[9px] uppercase tracking-[0.14em] text-zinc-500">
             Progress
           </p>
 
-          <p className="mt-1 text-base font-semibold text-white">
+          <p className="mt-0.5 text-sm font-semibold text-white">
             {progress}%
           </p>
         </div>
       </div>
 
-      <div className="mt-3">
+      <div className="mt-2">
         <ProgressBar value={progress} />
       </div>
 
       {isCompleted && (
-        <p className="mt-3 flex items-center gap-2 text-xs text-emerald-400">
+        <p className="mt-2 flex items-center gap-1.5 text-[11px] text-emerald-400">
           <CheckCircle2 className="h-3.5 w-3.5" />
           Today&apos;s business cycle completed successfully.
         </p>
       )}
 
-      <div className="mt-5 grid grid-cols-1 gap-4 xl:grid-cols-2">
-        <div className="rounded-2xl border border-white/5 bg-white/[0.015] px-4 py-2">
+      <div className="mt-4 grid grid-cols-1 gap-3 xl:grid-cols-2">
+        <div className="rounded-xl border border-white/5 bg-white/[0.015] px-3 py-1">
           <InfoRow
             label="AI Employees Ready"
             value={stats.workforce}
@@ -190,21 +188,21 @@ export default function HeroWidget({
           />
         </div>
 
-        <div className="rounded-2xl border border-blue-500/15 bg-blue-500/5 p-4">
-          <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-blue-300">
+        <div className="rounded-xl border border-blue-500/15 bg-blue-500/5 p-3">
+          <p className="text-[9px] font-semibold uppercase tracking-[0.14em] text-blue-300">
             AI Recommendation
           </p>
 
-          <h3 className="mt-1.5 text-sm font-semibold text-white">
+          <h3 className="mt-1 text-xs font-semibold text-white">
             {recommendation.title}
           </h3>
 
-          <p className="mt-1.5 text-xs leading-5 text-zinc-300">
+          <p className="mt-1 text-[11px] leading-4 text-zinc-300">
             {recommendation.message}
           </p>
 
           {recommendation.action && (
-            <p className="mt-2 text-xs font-medium text-blue-300">
+            <p className="mt-1.5 text-[11px] font-medium text-blue-300">
               Recommended action: {recommendation.action}
             </p>
           )}
@@ -215,7 +213,7 @@ export default function HeroWidget({
         type="button"
         onClick={onStartBusinessDay}
         disabled={isRunning}
-        className={`mt-5 inline-flex ${dashboardDensity.buttonHeight} items-center gap-2 rounded-xl px-5 text-sm font-semibold text-white shadow-lg transition-all duration-200 ${
+        className={`mt-4 inline-flex h-9 items-center gap-2 rounded-lg px-4 text-xs font-semibold text-white shadow-lg transition-all duration-200 ${
           isRunning
             ? "cursor-not-allowed bg-zinc-700 shadow-none"
             : isCompleted
@@ -225,17 +223,17 @@ export default function HeroWidget({
       >
         {isRunning ? (
           <>
-            <LoaderCircle className="h-4 w-4 animate-spin" />
+            <LoaderCircle className="h-3.5 w-3.5 animate-spin" />
             Working...
           </>
         ) : isCompleted ? (
           <>
-            <CheckCircle2 className="h-4 w-4" />
+            <CheckCircle2 className="h-3.5 w-3.5" />
             Business Day Completed
           </>
         ) : (
           <>
-            <Play className="h-4 w-4 fill-current" />
+            <Play className="h-3.5 w-3.5 fill-current" />
             Start Business Day
           </>
         )}

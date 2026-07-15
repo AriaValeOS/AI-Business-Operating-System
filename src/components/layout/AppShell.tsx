@@ -5,16 +5,18 @@ type AppShellProps = {
   children: React.ReactNode;
 };
 
-export default function AppShell({ children }: AppShellProps) {
+export default function AppShell({
+  children,
+}: AppShellProps) {
   return (
     <div className="min-h-screen bg-[#050914] text-white">
       <Sidebar />
 
       <main className="min-h-screen pl-72">
-        <div className="mx-auto w-full max-w-[1600px] px-8 py-8 xl:px-10">
+        <div className="mx-auto w-full max-w-[1650px] px-6 py-5">
           <TopBar />
 
-          <div className="pt-8">
+          <div className="pt-5">
             {children}
           </div>
         </div>

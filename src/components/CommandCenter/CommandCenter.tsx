@@ -8,11 +8,10 @@ import { businessCycleRunner } from "@/services/business/BusinessCycleRunner";
 
 import ActivityCard from "./cards/ActivityCard";
 import AssistantCard from "./cards/AssistantCard";
-import BrainCard from "./cards/BrainCard";
 import ConsoleCard from "./cards/ConsoleCard";
 import KpiCard from "./cards/KpiCard";
+import OperationsCard from "./cards/OperationsCard";
 import ProjectCard from "./cards/ProjectCard";
-import QueueCard from "./cards/QueueCard";
 import HeroWidget from "./widgets/HeroWidget";
 
 export default function CommandCenter() {
@@ -65,39 +64,43 @@ export default function CommandCenter() {
   }
 
   return (
-    <div>
-      <div className="mb-4">
-        <HeroWidget
-          onStartBusinessDay={handleSessionComplete}
-          isRunning={isRunning}
-          isCompleted={isCompleted}
-        />
+    <div className="space-y-4">
+      <HeroWidget
+        onStartBusinessDay={handleSessionComplete}
+        isRunning={isRunning}
+        isCompleted={isCompleted}
+      />
+
+      <DashboardStats />
+
+      <div className="grid grid-cols-1 gap-4 xl:grid-cols-12">
+        <div className="xl:col-span-7">
+          <ProjectCard />
+        </div>
+
+        <div className="xl:col-span-5">
+          <OperationsCard
+            queueCount={queueCount}
+            brainStatus={brainStatus}
+          />
+        </div>
+
+        <div className="xl:col-span-7">
+          <ActivityCard items={activities} />
+        </div>
+
+        <div className="xl:col-span-5">
+          <ConsoleCard logs={logs} />
+        </div>
+
+        <div className="xl:col-span-12">
+          <KpiCard />
+        </div>
       </div>
 
-      <div className="mb-4">
-        <DashboardStats />
-      </div>
-
-      <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
-        <ProjectCard />
-        <QueueCard queueCount={queueCount} />
-        <KpiCard />
-        <BrainCard brainStatus={brainStatus} />
-      </div>
-
-      <div className="mt-4">
-        <ActivityCard items={activities} />
-      </div>
-
-      <div className="mt-4">
-        <ConsoleCard logs={logs} />
-      </div>
-
-      <div className="mt-4">
-        <AssistantCard
-          onSessionComplete={handleSessionComplete}
-        />
-      </div>
+      <AssistantCard
+        onSessionComplete={handleSessionComplete}
+      />
     </div>
   );
 }
