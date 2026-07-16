@@ -1,41 +1,34 @@
 import { businessEngine } from "./BusinessEngine";
 import { businessStateService } from "./BusinessStateService";
-import { workforceService } from "@/services/employees/WorkforceService";
+
+import { employeeRunner } from "@/services/employees/EmployeeRunner";
 
 export type BusinessCycleCallbacks = {
   onRefresh: () => void;
-  onCompleted: (result: ReturnType<typeof businessEngine.startBusinessDay>) => void;
+  onCompleted: (
+    result: ReturnType<
+      typeof businessEngine.startBusinessDay
+    >
+  ) => void;
 };
 
 class BusinessCycleRunner {
   run(callbacks: BusinessCycleCallbacks) {
-    const employees = workforceService.getAll();
-
     businessStateService.setState("running");
-    workforceService.resetWorkforce();
 
-    callbacks.onRefresh();
+    employeeRunner.run(
+      callbacks.onRefresh,
 
-    employees.forEach((employee, index) => {
-      window.setTimeout(() => {
-        workforceService.updateStatus(
-          employee.id,
-          "working"
-        );
+      () => {
+        window.setTimeout(() => {
+          const result =
+            businessEngine.startBusinessDay();
 
-        callbacks.onRefresh();
-      }, 400 * (index + 1));
-    });
-
-    const delay =
-      400 * (employees.length + 1) + 700;
-
-    window.setTimeout(() => {
-      const result = businessEngine.startBusinessDay();
-
-      callbacks.onCompleted(result);
-      callbacks.onRefresh();
-    }, delay);
+          callbacks.onCompleted(result);
+          callbacks.onRefresh();
+        }, 700);
+      }
+    );
   }
 }
 

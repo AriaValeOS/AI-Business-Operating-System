@@ -1,6 +1,7 @@
 import {
   Bot,
   BriefcaseBusiness,
+  Cpu,
 } from "lucide-react";
 
 import Card from "@/components/ui/Card";
@@ -14,28 +15,34 @@ export default function ProjectCard() {
 
   return (
     <Card title="AI Workforce">
-      <div className="space-y-3">
+      <div className="space-y-2.5">
         {employees.map((employee) => {
           const progress = employee.progress ?? 0;
+
+          const activity =
+            employee.currentActivity ??
+            employee.lastCompletedTask ??
+            employee.currentTask ??
+            "No active task";
 
           return (
             <div
               key={employee.id}
-              className="rounded-xl border border-white/5 bg-white/[0.02] p-3 transition-all duration-200 hover:border-white/10 hover:bg-white/[0.035]"
+              className="rounded-xl border border-white/5 bg-white/[0.02] px-3 py-2.5 transition-all duration-200 hover:-translate-y-0.5 hover:border-white/10 hover:bg-white/[0.035]"
             >
               <div className="flex items-start gap-3">
-                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-blue-500/10 text-blue-300">
+                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-blue-500/10 text-blue-300">
                   <Bot className="h-4 w-4" />
                 </div>
 
                 <div className="min-w-0 flex-1">
-                  <div className="flex items-start justify-between gap-3">
+                  <div className="flex items-start justify-between gap-2">
                     <div className="min-w-0">
                       <h3 className="truncate text-sm font-semibold text-white">
                         {employee.name}
                       </h3>
 
-                      <p className="mt-0.5 truncate text-xs text-zinc-400">
+                      <p className="truncate text-[11px] text-zinc-400">
                         {employee.role}
                       </p>
                     </div>
@@ -43,36 +50,40 @@ export default function ProjectCard() {
                     <StatusBadge status={employee.status} />
                   </div>
 
-                  <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-2 text-xs text-zinc-500">
-                    <span className="inline-flex items-center gap-1.5 capitalize">
-                      <BriefcaseBusiness className="h-3.5 w-3.5" />
+                  <div className="mt-2 flex flex-wrap items-center gap-2 text-[11px] text-zinc-500">
+                    <span className="inline-flex items-center gap-1 capitalize">
+                      <BriefcaseBusiness className="h-3 w-3" />
                       {employee.department}
                     </span>
 
-                    <span className="truncate">
-                      Task:{" "}
-                      <span className="text-zinc-300">
-                        {employee.currentTask ?? "No active task"}
-                      </span>
-                    </span>
+                    <span className="text-zinc-600">•</span>
 
-                    <span className="rounded-md border border-white/5 bg-white/[0.025] px-2 py-1 text-[11px] text-zinc-400">
+                    <span className="inline-flex items-center gap-1">
+                      <Cpu className="h-3 w-3" />
                       {employee.aiModel}
                     </span>
                   </div>
 
-                  <div className="mt-3">
-                    <div className="flex items-center justify-between text-xs">
-                      <span className="text-zinc-500">
-                        Progress
-                      </span>
+                  <p
+                    className={`mt-2 truncate text-xs ${
+                      employee.status === "working"
+                        ? "text-blue-300"
+                        : employee.status === "completed"
+                          ? "text-emerald-300"
+                          : "text-zinc-300"
+                    }`}
+                  >
+                    {activity}
+                  </p>
 
-                      <span className="font-medium text-white">
-                        {progress}%
-                      </span>
+                  <div className="mt-2 flex items-center gap-3">
+                    <div className="flex-1">
+                      <ProgressBar value={progress} />
                     </div>
 
-                    <ProgressBar value={progress} />
+                    <span className="w-9 text-right text-[11px] font-semibold text-white">
+                      {progress}%
+                    </span>
                   </div>
                 </div>
               </div>

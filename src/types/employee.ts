@@ -37,6 +37,13 @@ export type Employee = {
   access: Access[];
 
   currentTask?: string;
+
+  /** Current live activity shown in Dashboard */
+  currentActivity?: string;
+
+  /** Last successfully completed activity */
+  lastCompletedTask?: string;
+
   progress?: number;
 
   createdAt: number;
