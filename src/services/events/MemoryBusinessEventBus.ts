@@ -1,3 +1,4 @@
+import { eventStore } from "./EventStoreService";
 import type {
   BusinessEvent,
   BusinessEventHandler,
@@ -23,6 +24,7 @@ export class MemoryBusinessEventBus
   async publish<TPayload>(
     event: BusinessEvent<TPayload>
   ): Promise<void> {
+    await eventStore.append(event);
     const eventHandlers =
       this.handlers.get(event.type) ?? new Set();
 

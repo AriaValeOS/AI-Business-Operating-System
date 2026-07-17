@@ -4,18 +4,33 @@ type ActivityCardProps = {
   items: string[];
 };
 
-export default function ActivityCard({ items }: ActivityCardProps) {
+export default function ActivityCard({
+  items,
+}: ActivityCardProps) {
   return (
     <Card title="📡 Activity Feed">
-      {items.length === 0 ? (
-        <p className="text-zinc-500">No activity yet.</p>
-      ) : (
-        <div className="space-y-2">
-          {items.map((item, index) => (
-            <p key={index}>✓ {item}</p>
-          ))}
-        </div>
-      )}
+      <div className="space-y-2">
+        {items.length === 0 ? (
+          <p className="text-sm text-zinc-500">
+            No activity yet.
+          </p>
+        ) : (
+          items.map((item, index) => (
+            <div
+              key={`${item}-${index}`}
+              className="flex items-start gap-2 text-sm"
+            >
+              <span className="mt-0.5 text-emerald-500">
+                ●
+              </span>
+
+              <span className="text-zinc-300">
+                {item}
+              </span>
+            </div>
+          ))
+        )}
+      </div>
     </Card>
   );
 }
