@@ -1,19 +1,38 @@
-import { registerEventHandlers } from "@/services/events/registerEventHandlers";
-import { registerProjections } from "@/services/projections";
+import { bootstrapManager } from "@/bootstrap/BootstrapManager";
 
-let systemInitialized = false;
+import { ActivityModule } from "@/modules/activity/ActivityModule";
+import { BusinessModule } from "@/modules/business/BusinessModule";
+import { CoreModule } from "@/modules/core/CoreModule";
+import { DecisionModule } from "@/modules/decisions/DecisionModule";
 
-export function initializeBusinessSystem(): void {
-  if (systemInitialized) {
+let initialized = false;
+
+export async function initializeBusinessSystem(): Promise<void> {
+  if (initialized) {
     return;
   }
 
-  registerProjections();
-  registerEventHandlers();
+  bootstrapManager.register(
+    new CoreModule(),
+  );
 
-  systemInitialized = true;
+  bootstrapManager.register(
+    new BusinessModule(),
+  );
+
+  bootstrapManager.register(
+    new ActivityModule(),
+  );
+
+  bootstrapManager.register(
+    new DecisionModule(),
+  );
+
+  await bootstrapManager.initialize();
+
+  initialized = true;
 
   console.log(
-    "[AI Business OS] Business system initialized."
+    "[AI Business OS] System ready.",
   );
 }
