@@ -8,25 +8,19 @@ import {
 
 import DashboardStats from "@/components/dashboard/DashboardStats";
 import { activityReadService } from "@/services/activity/ActivityReadService";
-import { brain } from "@/services/brain/Brain";
 import { initializeBusinessSystem } from "@/services/bootstrap/initializeBusinessSystem";
 import { businessCycleRunner } from "@/services/business/BusinessCycleRunner";
 
 import ActivityCard from "./cards/ActivityCard";
+import AIWorkforceWidget from "./cards/AIWorkforceWidget";
 import AssistantCard from "./cards/AssistantCard";
+import BusinessHealthWidget from "./cards/BusinessHealthWidget";
 import ConsoleCard from "./cards/ConsoleCard";
-import KpiCard from "./cards/KpiCard";
-import OperationsCard from "./cards/OperationsCard";
-import ProjectCard from "./cards/ProjectCard";
-import HeroWidget from "./widgets/HeroWidget";
+import ExecutiveBriefingWidget from "./cards/ExecutiveBriefingWidget";
+import FounderInboxWidget from "./cards/FounderInboxWidget";
+import MissionControlWidget from "./cards/ProjectCard";
 
 export default function CommandCenter() {
-  const [queueCount, setQueueCount] = useState(0);
-
-  const [brainStatus, setBrainStatus] = useState(
-    brain.think()
-  );
-
   const [activities, setActivities] = useState<
     string[]
   >([]);
@@ -63,6 +57,8 @@ export default function CommandCenter() {
     setActivities(formattedActivities);
   }, []);
 
+
+
   const refreshDashboard = useCallback(() => {
     setDashboardVersion(
       (version) => version + 1
@@ -83,10 +79,6 @@ export default function CommandCenter() {
       onRefresh: refreshDashboard,
 
       onCompleted: (result) => {
-        const status = brain.think();
-
-        setQueueCount(result.queueCount);
-        setBrainStatus(status);
         setLogs(result.logs);
         setIsRunning(false);
         setIsCompleted(true);
@@ -97,8 +89,8 @@ export default function CommandCenter() {
   }
 
   return (
-    <div className="space-y-4">
-      <HeroWidget
+    <div className="space-y-6">
+      <ExecutiveBriefingWidget
         onStartBusinessDay={
           handleSessionComplete
         }
@@ -108,18 +100,27 @@ export default function CommandCenter() {
 
       <DashboardStats />
 
-      <div className="grid grid-cols-1 gap-4 xl:grid-cols-12">
+      <section className="grid grid-cols-1 gap-4 xl:grid-cols-12">
         <div className="xl:col-span-7">
-          <ProjectCard />
+          <MissionControlWidget />
         </div>
 
         <div className="xl:col-span-5">
-          <OperationsCard
-            queueCount={queueCount}
-            brainStatus={brainStatus}
-          />
+          <BusinessHealthWidget />
+        </div>
+      </section>
+
+      <section className="grid grid-cols-1 gap-4 xl:grid-cols-12">
+        <div className="xl:col-span-5">
+          <FounderInboxWidget />
         </div>
 
+        <div className="xl:col-span-7">
+          <AIWorkforceWidget />
+        </div>
+      </section>
+
+      <section className="grid grid-cols-1 gap-4 xl:grid-cols-12">
         <div className="xl:col-span-7">
           <ActivityCard items={activities} />
         </div>
@@ -127,11 +128,7 @@ export default function CommandCenter() {
         <div className="xl:col-span-5">
           <ConsoleCard logs={logs} />
         </div>
-
-        <div className="xl:col-span-12">
-          <KpiCard />
-        </div>
-      </div>
+      </section>
 
       <AssistantCard
         onSessionComplete={

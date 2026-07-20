@@ -29,7 +29,10 @@ class EmployeeRunner {
           this.getFirstActivity(employee.name)
         );
 
-        employee.progress = 15;
+        workforceService.updateProgress(
+  employee.id,
+  15
+);
 
         await businessEventBus.publish(
           BusinessEventFactory.create({
@@ -57,7 +60,10 @@ class EmployeeRunner {
           this.getSecondActivity(employee.name)
         );
 
-        employee.progress = 45;
+        workforceService.updateProgress(
+  employee.id,
+  45
+);
 
         await businessEventBus.publish(
           BusinessEventFactory.create({
@@ -85,7 +91,10 @@ class EmployeeRunner {
           this.getThirdActivity(employee.name)
         );
 
-        employee.progress = 80;
+        workforceService.updateProgress(
+  employee.id,
+  80
+);
 
         await businessEventBus.publish(
           BusinessEventFactory.create({
@@ -112,7 +121,7 @@ class EmployeeRunner {
           employee.id
         );
 
-        employee.progress = 100;
+    
 
         await businessEventBus.publish(
           BusinessEventFactory.create({

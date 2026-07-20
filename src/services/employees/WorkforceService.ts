@@ -81,6 +81,27 @@ class WorkforceService {
 
     return employee;
   }
+  updateProgress(
+  employeeId: string,
+  progress: number
+): Employee | null {
+  const employee = workforce.find(
+    (item) => item.id === employeeId
+  );
+
+  if (!employee) {
+    return null;
+  }
+
+  employee.progress = Math.max(
+    0,
+    Math.min(100, progress)
+  );
+
+  employee.updatedAt = Date.now();
+
+  return employee;
+}
 
   completeActivity(
     employeeId: string,
