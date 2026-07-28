@@ -7,11 +7,12 @@ import { businessHealthService } from "@/services/business/BusinessHealthService
 import { morningBriefingService } from "@/services/business/MorningBriefingService";
 import { recommendationService } from "@/services/business/RecommendationService";
 import { dashboardService } from "@/services/dashboard/DashboardService";
+import { founderInboxService } from "@/services/decisions/FounderInboxService";
 
 export class DashboardReadService {
   async getDashboard(): Promise<DashboardViewModel> {
     const goal = goalService.getActiveGoal();
-
+const inbox = founderInboxService.getItems();
     const workforce =
       workforceReadService.getDashboardEmployees();
 
@@ -36,30 +37,7 @@ const businessHealth =
   activities,
   businessState,
   businessHealth,
-
-  inbox: [
-    {
-      id: "marketing",
-      title: "Approve Marketing Campaign",
-      priority: "High",
-      eta: "5 min",
-      icon: "marketing",
-    },
-    {
-      id: "payment",
-      title: "Approve Supplier Payment",
-      priority: "Medium",
-      eta: "2 min",
-      icon: "payment",
-    },
-    {
-      id: "contract",
-      title: "Review Partnership Agreement",
-      priority: "Low",
-      eta: "10 min",
-      icon: "contract",
-    },
-  ],
+  inbox,
 
   executiveBriefing: {
     goal,
