@@ -7,12 +7,15 @@ import {
 
 import Card from "@/components/ui/Card";
 import ProgressBar from "@/components/ui/ProgressBar";
+import type { Goal } from "@/types/goal";
 
-import { goalService } from "@/services/goals/GoalService";
+interface BusinessHealthWidgetProps {
+  goal: Goal;
+}
 
-export default function BusinessHealthWidget() {
-  const goal = goalService.getActiveGoal();
-
+export default function BusinessHealthWidget({
+  goal,
+}: BusinessHealthWidgetProps) {
   const progress =
     goal.kpi.target === 0
       ? 0

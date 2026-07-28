@@ -9,7 +9,11 @@ import {
 
 import Card from "@/components/ui/Card";
 import ProgressBar from "@/components/ui/ProgressBar";
-import { workforceReadService } from "@/services/employees/WorkforceReadService";
+import type { WorkforceDashboardEmployee } from "@/services/employees/WorkforceReadService";
+
+interface AIWorkforceWidgetProps {
+  employees: WorkforceDashboardEmployee[];
+}
 
 function getStatusDot(status: string): string {
   switch (status) {
@@ -49,10 +53,28 @@ function getStatusBadge(status: string): string {
   }
 }
 
-export default function AIWorkforceWidget() {
-  const employees =
-    workforceReadService.getDashboardEmployees();
+function getActivityLabel(status: string): string {
+  switch (status) {
+    case "Completed":
+      return "AI Completed";
 
+    case "Idle":
+      return "AI Ready";
+
+    case "Waiting":
+      return "AI Waiting";
+
+    case "Error":
+      return "Needs Attention";
+
+    default:
+      return "AI Active";
+  }
+}
+
+export default function AIWorkforceWidget({
+  employees,
+}: AIWorkforceWidgetProps) {
   const workingCount = employees.filter(
     (employee) => employee.status === "Working"
   ).length;
@@ -156,9 +178,7 @@ export default function AIWorkforceWidget() {
                       <Brain className="h-3 w-3" />
                     )}
 
-                    {employee.status === "Idle"
-                      ? "AI Ready"
-                      : "AI Active"}
+                    {getActivityLabel(employee.status)}
                   </div>
                 </div>
               </div>

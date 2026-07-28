@@ -7,15 +7,20 @@ import {
 
 import Card from "@/components/ui/Card";
 import ProgressBar from "@/components/ui/ProgressBar";
+import type { Goal } from "@/types/goal";
 
-import { goalService } from "@/services/goals/GoalService";
+interface MissionControlWidgetProps {
+  goal: Goal;
+}
 
-export default function MissionControlWidget() {
-  const goal = goalService.getActiveGoal();
-
+export default function MissionControlWidget({
+  goal,
+}: MissionControlWidgetProps) {
   const progress =
     goal.kpi.target > 0
-      ? Math.round((goal.kpi.current / goal.kpi.target) * 100)
+      ? Math.round(
+          (goal.kpi.current / goal.kpi.target) * 100
+        )
       : 0;
 
   const risk =
@@ -51,6 +56,7 @@ export default function MissionControlWidget() {
         <div className="rounded-xl border border-white/5 bg-white/[0.03] p-3">
           <div className="flex items-center gap-2 text-zinc-400">
             <Target className="h-4 w-4" />
+
             <span className="text-xs uppercase">
               Department
             </span>
@@ -64,6 +70,7 @@ export default function MissionControlWidget() {
         <div className="rounded-xl border border-white/5 bg-white/[0.03] p-3">
           <div className="flex items-center gap-2 text-zinc-400">
             <Flag className="h-4 w-4" />
+
             <span className="text-xs uppercase">
               Priority
             </span>
@@ -77,6 +84,7 @@ export default function MissionControlWidget() {
         <div className="rounded-xl border border-white/5 bg-white/[0.03] p-3">
           <div className="flex items-center gap-2 text-zinc-400">
             <AlertTriangle className="h-4 w-4" />
+
             <span className="text-xs uppercase">
               Risk
             </span>
@@ -90,6 +98,7 @@ export default function MissionControlWidget() {
         <div className="rounded-xl border border-white/5 bg-white/[0.03] p-3">
           <div className="flex items-center gap-2 text-zinc-400">
             <Timer className="h-4 w-4" />
+
             <span className="text-xs uppercase">
               KPI
             </span>

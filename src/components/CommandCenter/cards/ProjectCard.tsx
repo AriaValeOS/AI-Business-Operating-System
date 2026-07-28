@@ -1,95 +1,117 @@
 import {
-  Bot,
-  BriefcaseBusiness,
-  Cpu,
+  AlertTriangle,
+  Flag,
+  Target,
+  Timer,
 } from "lucide-react";
 
 import Card from "@/components/ui/Card";
 import ProgressBar from "@/components/ui/ProgressBar";
-import StatusBadge from "@/components/ui/StatusBadge";
+import type { Goal } from "@/types/goal";
 
-import { workforceService } from "@/services/employees/WorkforceService";
+interface MissionControlWidgetProps {
+  goal: Goal;
+}
 
-export default function ProjectCard() {
-  const employees = workforceService.getAll();
+export default function MissionControlWidget({
+  goal,
+}: MissionControlWidgetProps) {
+  const progress =
+    goal.kpi.target > 0
+      ? Math.round(
+          (goal.kpi.current / goal.kpi.target) * 100
+        )
+      : 0;
+
+  const risk =
+    goal.priority === "high"
+      ? "Medium"
+      : "Low";
 
   return (
-    <Card title="AI Workforce">
-      <div className="space-y-2.5">
-        {employees.map((employee) => {
-          const progress = employee.progress ?? 0;
+    <Card title="🎯 Mission Control">
+      <h2 className="mt-1 text-lg font-bold text-white">
+        {goal.title}
+      </h2>
 
-          const activity =
-            employee.currentActivity ??
-            employee.lastCompletedTask ??
-            employee.currentTask ??
-            "No active task";
+      <p className="mt-2 text-sm text-zinc-400">
+        Current business objective
+      </p>
 
-          return (
-            <div
-              key={employee.id}
-              className="rounded-xl border border-white/5 bg-white/[0.02] px-3 py-2.5 transition-all duration-200 hover:-translate-y-0.5 hover:border-white/10 hover:bg-white/[0.035]"
-            >
-              <div className="flex items-start gap-3">
-                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-blue-500/10 text-blue-300">
-                  <Bot className="h-4 w-4" />
-                </div>
+      <div className="mt-5">
+        <div className="mb-2 flex items-center justify-between">
+          <span className="text-xs uppercase tracking-wider text-zinc-500">
+            Progress
+          </span>
 
-                <div className="min-w-0 flex-1">
-                  <div className="flex items-start justify-between gap-2">
-                    <div className="min-w-0">
-                      <h3 className="truncate text-sm font-semibold text-white">
-                        {employee.name}
-                      </h3>
+          <span className="font-semibold text-white">
+            {progress}%
+          </span>
+        </div>
 
-                      <p className="truncate text-[11px] text-zinc-400">
-                        {employee.role}
-                      </p>
-                    </div>
+        <ProgressBar value={progress} />
+      </div>
 
-                    <StatusBadge status={employee.status} />
-                  </div>
+      <div className="mt-6 grid grid-cols-2 gap-4">
+        <div className="rounded-xl border border-white/5 bg-white/[0.03] p-3">
+          <div className="flex items-center gap-2 text-zinc-400">
+            <Target className="h-4 w-4" />
 
-                  <div className="mt-2 flex flex-wrap items-center gap-2 text-[11px] text-zinc-500">
-                    <span className="inline-flex items-center gap-1 capitalize">
-                      <BriefcaseBusiness className="h-3 w-3" />
-                      {employee.department}
-                    </span>
+            <span className="text-xs uppercase">
+              Department
+            </span>
+          </div>
 
-                    <span className="text-zinc-600">•</span>
+          <p className="mt-2 font-semibold capitalize text-white">
+            {goal.department}
+          </p>
+        </div>
 
-                    <span className="inline-flex items-center gap-1">
-                      <Cpu className="h-3 w-3" />
-                      {employee.aiModel}
-                    </span>
-                  </div>
+        <div className="rounded-xl border border-white/5 bg-white/[0.03] p-3">
+          <div className="flex items-center gap-2 text-zinc-400">
+            <Flag className="h-4 w-4" />
 
-                  <p
-                    className={`mt-2 truncate text-xs ${
-                      employee.status === "working"
-                        ? "text-blue-300"
-                        : employee.status === "completed"
-                          ? "text-emerald-300"
-                          : "text-zinc-300"
-                    }`}
-                  >
-                    {activity}
-                  </p>
+            <span className="text-xs uppercase">
+              Priority
+            </span>
+          </div>
 
-                  <div className="mt-2 flex items-center gap-3">
-                    <div className="flex-1">
-                      <ProgressBar value={progress} />
-                    </div>
+          <p className="mt-2 font-semibold capitalize text-white">
+            {goal.priority}
+          </p>
+        </div>
 
-                    <span className="w-9 text-right text-[11px] font-semibold text-white">
-                      {progress}%
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          );
-        })}
+        <div className="rounded-xl border border-white/5 bg-white/[0.03] p-3">
+          <div className="flex items-center gap-2 text-zinc-400">
+            <AlertTriangle className="h-4 w-4" />
+
+            <span className="text-xs uppercase">
+              Risk
+            </span>
+          </div>
+
+          <p className="mt-2 font-semibold text-emerald-400">
+            {risk}
+          </p>
+        </div>
+
+        <div className="rounded-xl border border-white/5 bg-white/[0.03] p-3">
+          <div className="flex items-center gap-2 text-zinc-400">
+            <Timer className="h-4 w-4" />
+
+            <span className="text-xs uppercase">
+              KPI
+            </span>
+          </div>
+
+          <p className="mt-2 font-semibold text-white">
+            {goal.kpi.current} / {goal.kpi.target}
+          </p>
+
+          <p className="text-xs text-zinc-500">
+            {goal.kpi.unit}
+          </p>
+        </div>
       </div>
     </Card>
   );

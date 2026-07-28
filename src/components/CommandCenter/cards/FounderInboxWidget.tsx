@@ -7,32 +7,37 @@ import {
 } from "lucide-react";
 
 import Card from "@/components/ui/Card";
+import type { FounderInboxItem } from "@/types/dashboard";
 
-const inboxItems = [
-  {
-    icon: Megaphone,
-    title: "Approve Marketing Campaign",
-    priority: "High",
-    eta: "5 min",
-    color: "text-amber-400",
-  },
-  {
-    icon: CreditCard,
-    title: "Approve Supplier Payment",
-    priority: "Medium",
-    eta: "2 min",
-    color: "text-blue-400",
-  },
-  {
-    icon: FileSignature,
-    title: "Review Partnership Agreement",
-    priority: "Low",
-    eta: "10 min",
-    color: "text-emerald-400",
-  },
-];
+interface FounderInboxWidgetProps {
+  items: FounderInboxItem[];
+}
 
-export default function FounderInboxWidget() {
+function getIcon(type: FounderInboxItem["icon"]) {
+  switch (type) {
+    case "marketing":
+      return {
+        Icon: Megaphone,
+        color: "text-amber-400",
+      };
+
+    case "payment":
+      return {
+        Icon: CreditCard,
+        color: "text-blue-400",
+      };
+
+    case "contract":
+      return {
+        Icon: FileSignature,
+        color: "text-emerald-400",
+      };
+  }
+}
+
+export default function FounderInboxWidget({
+  items,
+}: FounderInboxWidgetProps) {
   return (
     <Card title="📥 Founder Inbox">
       <p className="mb-5 text-sm text-zinc-400">
@@ -40,18 +45,18 @@ export default function FounderInboxWidget() {
       </p>
 
       <div className="space-y-3">
-        {inboxItems.map((item) => {
-          const Icon = item.icon;
+        {items.map((item) => {
+          const { Icon, color } = getIcon(item.icon);
 
           return (
             <div
-              key={item.title}
+              key={item.id}
               className="rounded-xl border border-white/5 bg-white/[0.03] p-3 transition hover:border-blue-500/20 hover:bg-white/[0.05]"
             >
               <div className="flex items-start justify-between">
                 <div className="flex gap-3">
                   <div className="rounded-lg bg-white/[0.04] p-2">
-                    <Icon className={`h-4 w-4 ${item.color}`} />
+                    <Icon className={`h-4 w-4 ${color}`} />
                   </div>
 
                   <div>

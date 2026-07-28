@@ -7,9 +7,10 @@ import {
 } from "react";
 
 import DashboardStats from "@/components/dashboard/DashboardStats";
-import { activityReadService } from "@/services/activity/ActivityReadService";
 import { initializeBusinessSystem } from "@/services/bootstrap/initializeBusinessSystem";
 import { businessCycleRunner } from "@/services/business/BusinessCycleRunner";
+import { dashboardReadService } from "@/services/dashboard/DashboardReadService";
+import type { DashboardViewModel } from "@/types/dashboard";
 
 import ActivityCard from "./cards/ActivityCard";
 import AIWorkforceWidget from "./cards/AIWorkforceWidget";
@@ -21,12 +22,16 @@ import FounderInboxWidget from "./cards/FounderInboxWidget";
 import MissionControlWidget from "./cards/ProjectCard";
 
 export default function CommandCenter() {
+  const [dashboard, setDashboard] =
+    useState<DashboardViewModel | null>(null);
+
   const [activities, setActivities] = useState<
     string[]
   >([]);
 
   const [logs, setLogs] = useState<string[]>([]);
   const [isRunning, setIsRunning] = useState(false);
+
   const [isCompleted, setIsCompleted] =
     useState(false);
 
@@ -36,12 +41,14 @@ export default function CommandCenter() {
     initializeBusinessSystem();
   }, []);
 
-  const loadActivities = useCallback(async () => {
-    const activityItems =
-      await activityReadService.getLatest(20);
+  const loadDashboard = useCallback(async () => {
+    const dashboardData =
+      await dashboardReadService.getDashboard();
 
-    const formattedActivities = activityItems.map(
-      (activity) => {
+    setDashboard(dashboardData);
+
+    const formattedActivities =
+      dashboardData.activities.map((activity) => {
         const time = new Date(
           activity.timestamp
         ).toLocaleTimeString([], {
@@ -51,21 +58,18 @@ export default function CommandCenter() {
         });
 
         return `${time} • ${activity.title}`;
-      }
-    );
+      });
 
     setActivities(formattedActivities);
   }, []);
-
-
 
   const refreshDashboard = useCallback(() => {
     setDashboardVersion(
       (version) => version + 1
     );
 
-    void loadActivities();
-  }, [loadActivities]);
+    void loadDashboard();
+  }, [loadDashboard]);
 
   function handleSessionComplete() {
     if (isRunning) {
@@ -102,21 +106,38 @@ export default function CommandCenter() {
 
       <section className="grid grid-cols-1 gap-4 xl:grid-cols-12">
         <div className="xl:col-span-7">
-          <MissionControlWidget />
+          {dashboard ? (
+            <MissionControlWidget
+              goal={dashboard.goal}
+            />
+          ) : (
+            <div className="rounded-xl border border-white/5 bg-white/[0.02] p-6 text-sm text-zinc-500">
+              Mission data will appear after the
+              dashboard refreshes.
+            </div>
+          )}
         </div>
 
         <div className="xl:col-span-5">
-          <BusinessHealthWidget />
+         {dashboard && (
+  <BusinessHealthWidget goal={dashboard.goal} />
+)}
         </div>
       </section>
 
       <section className="grid grid-cols-1 gap-4 xl:grid-cols-12">
         <div className="xl:col-span-5">
-          <FounderInboxWidget />
+          {dashboard && (
+  <FounderInboxWidget
+    items={dashboard.inbox}
+  />
+)}
         </div>
 
         <div className="xl:col-span-7">
-          <AIWorkforceWidget />
+          <AIWorkforceWidget
+            employees={dashboard?.workforce ?? []}
+          />
         </div>
       </section>
 
