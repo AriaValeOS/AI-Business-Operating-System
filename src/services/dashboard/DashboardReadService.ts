@@ -3,6 +3,10 @@ import { businessStateService } from "@/services/business/BusinessStateService";
 import { workforceReadService } from "@/services/employees/WorkforceReadService";
 import { goalService } from "@/services/goals/GoalService";
 import { DashboardViewModel } from "@/types/dashboard";
+import { businessHealthService } from "@/services/business/BusinessHealthService";
+import { morningBriefingService } from "@/services/business/MorningBriefingService";
+import { recommendationService } from "@/services/business/RecommendationService";
+import { dashboardService } from "@/services/dashboard/DashboardService";
 
 export class DashboardReadService {
   async getDashboard(): Promise<DashboardViewModel> {
@@ -16,12 +20,22 @@ export class DashboardReadService {
 
     const businessState =
       businessStateService.getState();
+const briefing =
+  morningBriefingService.getBriefing();
 
+const stats =
+  dashboardService.getStats();
+
+const recommendation =
+  recommendationService.getRecommendation();
+const businessHealth =
+  businessHealthService.getHealth();
     return {
   goal,
   workforce,
   activities,
   businessState,
+  businessHealth,
 
   inbox: [
     {
@@ -46,6 +60,14 @@ export class DashboardReadService {
       icon: "contract",
     },
   ],
+
+  executiveBriefing: {
+    goal,
+    briefing,
+    stats,
+    recommendation,
+    businessState,
+  },
 };
   }
 }

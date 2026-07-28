@@ -13,13 +13,10 @@ import ProgressBar from "@/components/ui/ProgressBar";
 
 import { dashboardDensity } from "@/styles/designTokens";
 
-import { businessStateService } from "@/services/business/BusinessStateService";
-import { morningBriefingService } from "@/services/business/MorningBriefingService";
-import { recommendationService } from "@/services/business/RecommendationService";
-import { dashboardService } from "@/services/dashboard/DashboardService";
-import { goalService } from "@/services/goals/GoalService";
+import type { ExecutiveBriefingViewModel } from "@/types/dashboard";
 
 type ExecutiveBriefingWidgetProps = {
+  data: ExecutiveBriefingViewModel;
   onStartBusinessDay: () => void;
   isRunning: boolean;
   isCompleted: boolean;
@@ -47,23 +44,24 @@ const businessStateConfig = {
 } as const;
 
 export default function ExecutiveBriefingWidget({
+  data,
   onStartBusinessDay,
   isRunning,
   isCompleted,
 }: ExecutiveBriefingWidgetProps) {
-  const goal = goalService.getActiveGoal();
-  const briefing = morningBriefingService.getBriefing();
-  const stats = dashboardService.getStats();
-  const recommendation = recommendationService.getRecommendation();
-
-  const storedBusinessState =
-    businessStateService.getState() as BusinessState;
+  const {
+    goal,
+    briefing,
+    stats,
+    recommendation,
+    businessState: storedBusinessState,
+  } = data;
 
   const businessState: BusinessState = isRunning
     ? "running"
     : isCompleted
       ? "completed"
-      : storedBusinessState;
+      : (storedBusinessState as BusinessState);
 
   const currentState = businessStateConfig[businessState];
 
@@ -252,13 +250,9 @@ export default function ExecutiveBriefingWidget({
         </div>
 
         <div className="mt-2 flex justify-between text-[10px] text-zinc-500">
-          <span>
-            Current: {goal.kpi.current}
-          </span>
+          <span>Current: {goal.kpi.current}</span>
 
-          <span>
-            Target: {goal.kpi.target}
-          </span>
+          <span>Target: {goal.kpi.target}</span>
         </div>
       </div>
 

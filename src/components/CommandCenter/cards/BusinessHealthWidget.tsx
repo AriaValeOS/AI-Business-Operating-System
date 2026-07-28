@@ -7,42 +7,48 @@ import {
 
 import Card from "@/components/ui/Card";
 import ProgressBar from "@/components/ui/ProgressBar";
+
+import type {
+  DashboardBusinessHealth,
+} from "@/types/dashboard";
 import type { Goal } from "@/types/goal";
 
 interface BusinessHealthWidgetProps {
   goal: Goal;
+  health: DashboardBusinessHealth;
 }
 
 export default function BusinessHealthWidget({
   goal,
+  health,
 }: BusinessHealthWidgetProps) {
-  const progress =
-    goal.kpi.target === 0
-      ? 0
-      : Math.min(
-          100,
-          Math.round(
-            (goal.kpi.current / goal.kpi.target) * 100,
-          ),
-        );
-
-  const score =
-    progress >= 90
-      ? "Excellent"
-      : progress >= 70
-        ? "Good"
-        : progress >= 50
-          ? "Warning"
-          : "Critical";
-
-  const scoreColor =
-    progress >= 90
+  const statusColor =
+    health.status === "Healthy"
       ? "text-emerald-400"
-      : progress >= 70
-        ? "text-blue-400"
-        : progress >= 50
-          ? "text-amber-400"
-          : "text-red-400";
+      : health.status === "Warning"
+        ? "text-amber-400"
+        : "text-red-400";
+
+  const insightStyles =
+    health.status === "Healthy"
+      ? "border-emerald-500/15 bg-emerald-500/[0.05]"
+      : health.status === "Warning"
+        ? "border-amber-500/15 bg-amber-500/[0.05]"
+        : "border-red-500/15 bg-red-500/[0.05]";
+
+  const insightTitleColor =
+    health.status === "Healthy"
+      ? "text-emerald-300"
+      : health.status === "Warning"
+        ? "text-amber-300"
+        : "text-red-300";
+
+  const insightIconColor =
+    health.status === "Healthy"
+      ? "text-emerald-400"
+      : health.status === "Warning"
+        ? "text-amber-400"
+        : "text-red-400";
 
   return (
     <Card title="📊 Business Health">
@@ -54,15 +60,19 @@ export default function BusinessHealthWidget({
 
           <div className="mt-2 flex items-end gap-2">
             <span className="text-3xl font-bold text-white">
-              {progress}
+              {health.score}
             </span>
 
             <span
-              className={`mb-1 text-sm font-semibold ${scoreColor}`}
+              className={`mb-1 text-sm font-semibold ${statusColor}`}
             >
-              {score}
+              {health.status}
             </span>
           </div>
+
+          <p className="mt-2 text-xs leading-5 text-zinc-500">
+            {health.reason}
+          </p>
         </div>
 
         <div className="rounded-xl border border-white/5 bg-white/[0.03] p-3">
@@ -71,7 +81,7 @@ export default function BusinessHealthWidget({
       </div>
 
       <div className="mt-5">
-        <ProgressBar value={progress} />
+        <ProgressBar value={health.score} />
       </div>
 
       <div className="mt-6 grid grid-cols-2 gap-3">
@@ -108,19 +118,23 @@ export default function BusinessHealthWidget({
         </div>
       </div>
 
-      <div className="mt-6 rounded-xl border border-emerald-500/15 bg-emerald-500/[0.05] p-3">
+      <div
+        className={`mt-6 rounded-xl border p-3 ${insightStyles}`}
+      >
         <div className="flex items-start gap-3">
-          <CheckCircle2 className="mt-0.5 h-4 w-4 text-emerald-400" />
+          <CheckCircle2
+            className={`mt-0.5 h-4 w-4 ${insightIconColor}`}
+          />
 
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-emerald-300">
+            <p
+              className={`text-xs font-semibold uppercase tracking-[0.14em] ${insightTitleColor}`}
+            >
               AI Insight
             </p>
 
             <p className="mt-1 text-xs leading-5 text-zinc-300">
-              Business performance is stable. Continue focusing on{" "}
-              <strong>{goal.department}</strong> to reach the next
-              milestone.
+              {health.insight}
             </p>
           </div>
         </div>

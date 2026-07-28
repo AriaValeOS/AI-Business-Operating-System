@@ -25,21 +25,14 @@ export default function CommandCenter() {
   const [dashboard, setDashboard] =
     useState<DashboardViewModel | null>(null);
 
-  const [activities, setActivities] = useState<
-    string[]
-  >([]);
+  const [activities, setActivities] =
+    useState<string[]>([]);
 
   const [logs, setLogs] = useState<string[]>([]);
   const [isRunning, setIsRunning] = useState(false);
 
   const [isCompleted, setIsCompleted] =
     useState(false);
-
-  const [, setDashboardVersion] = useState(0);
-
-  useEffect(() => {
-    initializeBusinessSystem();
-  }, []);
 
   const loadDashboard = useCallback(async () => {
     const dashboardData =
@@ -50,7 +43,7 @@ export default function CommandCenter() {
     const formattedActivities =
       dashboardData.activities.map((activity) => {
         const time = new Date(
-          activity.timestamp
+          activity.timestamp,
         ).toLocaleTimeString([], {
           hour: "2-digit",
           minute: "2-digit",
@@ -63,11 +56,21 @@ export default function CommandCenter() {
     setActivities(formattedActivities);
   }, []);
 
-  const refreshDashboard = useCallback(() => {
-    setDashboardVersion(
-      (version) => version + 1
-    );
+  useEffect(() => {
+    initializeBusinessSystem();
+  }, []);
 
+  useEffect(() => {
+    const timeoutId = window.setTimeout(() => {
+      void loadDashboard();
+    }, 0);
+
+    return () => {
+      window.clearTimeout(timeoutId);
+    };
+  }, [loadDashboard]);
+
+  const refreshDashboard = useCallback(() => {
     void loadDashboard();
   }, [loadDashboard]);
 
@@ -94,13 +97,16 @@ export default function CommandCenter() {
 
   return (
     <div className="space-y-6">
-      <ExecutiveBriefingWidget
-        onStartBusinessDay={
-          handleSessionComplete
-        }
-        isRunning={isRunning}
-        isCompleted={isCompleted}
-      />
+      {dashboard && (
+        <ExecutiveBriefingWidget
+          data={dashboard.executiveBriefing}
+          onStartBusinessDay={
+            handleSessionComplete
+          }
+          isRunning={isRunning}
+          isCompleted={isCompleted}
+        />
+      )}
 
       <DashboardStats />
 
@@ -119,24 +125,29 @@ export default function CommandCenter() {
         </div>
 
         <div className="xl:col-span-5">
-         {dashboard && (
-  <BusinessHealthWidget goal={dashboard.goal} />
-)}
+          {dashboard && (
+            <BusinessHealthWidget
+              goal={dashboard.goal}
+              health={dashboard.businessHealth}
+            />
+          )}
         </div>
       </section>
 
       <section className="grid grid-cols-1 gap-4 xl:grid-cols-12">
         <div className="xl:col-span-5">
           {dashboard && (
-  <FounderInboxWidget
-    items={dashboard.inbox}
-  />
-)}
+            <FounderInboxWidget
+              items={dashboard.inbox}
+            />
+          )}
         </div>
 
         <div className="xl:col-span-7">
           <AIWorkforceWidget
-            employees={dashboard?.workforce ?? []}
+            employees={
+              dashboard?.workforce ?? []
+            }
           />
         </div>
       </section>
